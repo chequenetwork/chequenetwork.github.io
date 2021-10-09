@@ -1,2 +1,2 @@
 # chequenetwork.github.io
-Website of cheque.network
+Website of www.checkbook.cash
