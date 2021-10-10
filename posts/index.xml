@@ -6,14 +6,15 @@
     <description>Recent content in Posts on CheckBook.cash</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Sep 2021 08:45:48 +0800</lastBuildDate><atom:link href="https://www.checkbook.cash/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Oct 2021 08:45:48 +0800</lastBuildDate><atom:link href="https://www.checkbook.cash/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My First Post</title>
-      <link>https://www.checkbook.cash/posts/my-first-post/</link>
-      <pubDate>Thu, 23 Sep 2021 08:45:48 +0800</pubDate>
+      <title>Hello world from blockchain cheques</title>
+      <link>https://www.checkbook.cash/posts/hello-world-from-blockchain-cheques/</link>
+      <pubDate>Sun, 10 Oct 2021 08:45:48 +0800</pubDate>
       
-      <guid>https://www.checkbook.cash/posts/my-first-post/</guid>
-      <description></description>
+      <guid>https://www.checkbook.cash/posts/hello-world-from-blockchain-cheques/</guid>
+      <description>We are the developers of smartBCH side chain. Although our main mission is to develop the full-node client of smartBCH, we also would like to contribute some useful utilities to its ecosystem. So we created the DApp for blockchain cheques and this site.
+Why do we design such a DApp? Because we believe some features of paper checks can be borrowed to enrich the methods for airdropping. First of all, it is a Notification Center of airdrops.</description>
     </item>
     
   </channel>
