@@ -6,7 +6,17 @@
     <description>Recent content on CheckBook.cash</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 Oct 2021 07:45:48 +0800</lastBuildDate><atom:link href="https://www.checkbook.cash/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Oct 2021 01:05:08 +0100</lastBuildDate><atom:link href="https://www.checkbook.cash/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Get Checks through Wagon.cash Bridge</title>
+      <link>https://www.checkbook.cash/posts/get-checks-through-wagoncash-bridge/</link>
+      <pubDate>Wed, 20 Oct 2021 01:05:08 +0100</pubDate>
+      
+      <guid>https://www.checkbook.cash/posts/get-checks-through-wagoncash-bridge/</guid>
+      <description>To test the new version of CheckBook DApp, we are giving out checks together with wagon.cash, a BCH-to-smartBCH bridge.
+The rule is simple: for each cross-chain transfer through wagon.cash, a check with some $CATS will also be sent to the receiver of cross-chain BCH. The rule does not take the transfer amount or the status of the receiver into account. And the count is not limited: a receiver can get multiple checks if she transferred BCH through wagon.</description>
+    </item>
+    
     <item>
       <title>Other Usages of Blockchain Cheques</title>
       <link>https://www.checkbook.cash/posts/other-usages-of-blockchain-cheques/</link>
