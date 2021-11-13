@@ -2,16 +2,23 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="icon" href="https://www.checkbook.cash/favicon.svg">
-<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+<script src="/app/ethers-5.4.6.umd.min.js" type="application/javascript"></script>
+<script src="/app/detect-provider.min.js"></script>
 <title>CheckBook Airdrop</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-<body>
+<body style="margin: 0 auto; width: 380px">
 <center>
-<p class="subtitle is-4"><br>Can this address get airdrop?</p>
+<p ><br>
+<span data-T>Each invited account will be airdropped a check with $5 value after signing the first transaction on smartBCH.//每位受邀用户，在smartBCH链首次签署交易后，将收到价值5美元的支票空投。</span></p>
+<!--
 <input id="addr" class="input is-info is-small" style="width: 360px; font-size: 16px" 
   placeholder="Please enter your EVM-style hex address here" type="text"><br>
+-->
 <p style="font-size: 6px">&nbsp;</p>
-<button class="button is-info" onclick="check()">Check!</button>
+<button id="checkBtn" class="button is-info" onclick="check()" data-T>Can I get airdropped?//我能获得空投吗？</button>
+<p id="loadingP" style="display: none"><img src="/loading.gif"/></p>
+<p id="yesP" style="display: none"><img src="/OpenWithCat.gif"/></p>
+<p id="noP" style="display: none"><img src="/OpenWithoutCat.gif"/></p>
 </center>
 
 <script>
@@ -43,7 +50,9 @@ function binarySearch(addrArr, myAddr) {
 		// Find the mid index
 		let mid=Math.floor((start + end)/2)
 
+
 		let cmpResult = compareAddr(getAddrFromArray(addrArr, mid), myAddr)
+		console.log("why", start, mid, end, cmpResult)
 		// If element is present at mid, return True
 		if(cmpResult==0) {
 			return true
@@ -65,26 +74,130 @@ async function getAddrArr(url) {
 }
 
 async function check() {
-	var addr = document.getElementById("addr").value.trim()
-	if(addr.length == 0) {
-		alert("No adddress was enter!")
-		return
-	}
-	try {
-		addr = ethers.utils.getAddress(addr)
-	} catch(e) {
-		alert("Invalid address: "+addr)
-		return
-	}
-	var n = ethers.BigNumber.from(addr.substr(0, 8)).toNumber()
+	var ok = await connect()
+	if(!ok) return
+	document.getElementById("checkBtn").disabled = true
+	document.getElementById("loadingP").style.display = "block"
+	document.getElementById("yesP").style.display = "none"
+	document.getElementById("noP").style.display = "none"
+	const provider = new ethers.providers.Web3Provider(window.ethereum)
+	const signer = provider.getSigner()
+	const myAddr = await signer.getAddress()
+	console.log("myAddr", myAddr)
+	var n = ethers.BigNumber.from(myAddr.substr(0, 8)).toNumber()
 	targetNum = n%2048
+	console.log("targetNum", targetNum)
 	var addrArr = await getAddrArr(`./addr_dat/addr_list.${targetNum}.dat`)
-	if(binarySearch(addrArr, ethers.utils.arrayify(addr))) {
-		alert("Yes, you can!")
+	ok = binarySearch(addrArr, ethers.utils.arrayify(myAddr))
+	console.log("ok", ok)
+	document.getElementById("loadingP").style.display = "none"
+	document.getElementById("checkBtn").disabled = false
+	if(ok) {
+		document.getElementById("yesP").style.display = "block"
 	} else {
-		alert("Sorry, you can't!")
+		document.getElementById("noP").style.display = "block"
 	}
 }
+
+async function connect() {
+	if (typeof window.ethereum === 'undefined') {
+		if (typeof window.web3 !== 'undefined') {
+			window.ethereum = window.web3;
+		} else if (typeof window.TPJSBrigeClient !== 'undefined') {
+			window.ethereum = window.TPJSBrigeClient;
+		} else if (typeof window.imToken !== 'undefined') {
+			window.ethereum = window.imToken;
+		} else {
+			const provider = await detectEthereumProvider();
+			if (provider) {
+				window.ethereum = provider;
+			} else if(IsPC()) {
+				myAlert(T("Your browser has not installed a wallet extension (like MetaMask).//您的浏览器尚未安装钱包扩展（例如MetaMask）。"));
+			} else {
+				myAlert(T("Please open this page inside a mobile wallet App.//请使用钱包APP内置浏览器打开本页面。"));
+			}
+		}
+	}
+	window.accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+	if (window.accounts.length == 0) {
+		myAlert(T("Cannot connect to wallet//钱包连接失败"));
+		return false;
+	}
+	return true;
+}
+
+window.addEventListener('DOMContentLoaded', async (event) => {
+	window.LANG = "en";
+	const url = new URL(location.href);
+	if(url.searchParams.get("lang") == "cn") {
+		window.LANG = "cn";
+	} else if (url.searchParams.get("lang") == "en") {
+		window.LANG = "en";
+	} else if (navigator.language.startsWith("zh")) {
+		window.LANG = "cn";
+	}
+	var elems = document.querySelectorAll('*[data-T]');
+	for (var i = 0; i < elems.length; i++) {
+		elems[i].innerText = T(elems[i].innerText);
+	}
+})
+
+// Select the English version of Chinese version of a text
+function T(text) {
+	try {
+		const twoStr = text.split("//");
+		if (window.LANG === "cn") {
+		    return twoStr[1];
+		}
+		return twoStr[0];
+	} catch (e) {
+		return text;
+	}
+}
+
+function IsPC() {
+       var userAgentInfo = navigator.userAgent;
+       var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");
+       var flag = true;
+       for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag = false;
+                break;
+             }
+       }
+       return flag;
+}
+
+if(IsPC()) {
+   document.body.style.zoom = 1.36;
+}
+
+	
+/*
+空投设计思路
+
+用户打开页面，屏幕正中间显示一排文字:
+每位合格用户可以收到价值5美元的支票（约合XXXX个cats），点击查询你是否符合活动要求
+（下方显示一个查询按钮，可以设计成类似微信开红包的按钮）
+
+用户点击按钮，自动连接钱包，并且返回查询结果，有两种:
+
+1  恭喜，您符合活动要求，系统已向您发送一张含有XXXX个cats的支票（当前市值5美元），请在7天内及时领取，过期作废。领取方法: https://checkbook.cash/app/airdrop-guide
+
+2 很遗憾，您不符合本次活动要求。但是您依旧可以参与入金获赠支票的活动，只要充值大于0.0002个BCH（折合0.13美元），即可获得一张包含随机数量cats的支票，最高可以达到1万cats
+
+另外，任何用户都可以推荐其他人来领取空投，如果有合格用户成功领取支票，推荐人即可获得价值1美元cats的奖励（每天结算一次）
+您的推荐链接如下 https://www.checkbook.cash/app/?r=epxAsAmEtTL
+
+领到的cats有什么用？
+可以进入dex交易变现，或者LP挖矿
+benswap  https://dex.benswap.cash/
+mistswap  https://app.mistswap.fi/swap
+muesliswap  https://bch.muesliswap.com/swap
+
+更多smartBCH相关的社群
+（这里可以列出一些重要的电报群）
+*/	
 </script>
 </body>
 </html>
