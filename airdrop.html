@@ -17,8 +17,8 @@
 <p style="font-size: 6px">&nbsp;</p>
 <button id="checkBtn" class="button is-info" onclick="check()" data-T>Can I get airdropped?//我能获得空投吗？</button>
 <p id="loadingP" style="display: none"><img src="/loading.gif"/></p>
-<p id="yesP" style="display: none"><img src="/OpenWithCat.gif"/></p>
-<p id="noP" style="display: none"><img src="/OpenWithoutCat.gif"/></p>
+<p id="yesP" style="display: none"><img src="/BoxOpenWithCat.gif"/></p>
+<p id="noP" style="display: none"><img src="/BoxOpenWithoutCat.gif"/></p>
 </center>
 
 <script>
@@ -89,7 +89,13 @@ async function check() {
 	console.log("targetNum", targetNum)
 	var addrArr = await getAddrArr(`./addr_dat/addr_list.${targetNum}.dat`)
 	ok = binarySearch(addrArr, ethers.utils.arrayify(myAddr))
-	console.log("ok", ok)
+	console.log("ok1", ok)
+	if(ok) {
+		const provider = new ethers.providers.JsonRpcProvider("https://smartbch.greyh.at")
+		const nonce = await provider.getTransactionCount(myAddr)
+		ok = (nonce == 0)
+	}
+	console.log("ok2", ok)
 	document.getElementById("loadingP").style.display = "none"
 	document.getElementById("checkBtn").disabled = false
 	if(ok) {
