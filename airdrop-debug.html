@@ -106,6 +106,7 @@ async function getAddrArr(url) {
 	let blob = await response.blob()
 	alert("Now received")
 	let buffer = await blob.arrayBuffer()
+	alert(buffer)
 	return new Uint8Array(buffer)
 }
 
@@ -125,6 +126,8 @@ async function check() {
 	targetNum = n%2048
 	alert("targetNum"+targetNum)
 	var addrArr = await getAddrArr(`/addr_dat/addr_list.${targetNum}.dat`)
+	alert(addrArr)
+	alert(ethers.utils.arrayify(myAddr))
 	ok = binarySearch(addrArr, ethers.utils.arrayify(myAddr))
 	alert("ok1"+ok)
 	if(ok) {
