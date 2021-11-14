@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="icon" href="https://www.checkbook.cash/favicon.svg">
+<link rel="icon" href="https://checkbook.cash/favicon.svg">
 <script src="/app/ethers-5.4.6.umd.min.js" type="application/javascript"></script>
 <script src="/app/detect-provider.min.js"></script>
 <title>CheckBook Airdrop</title>
@@ -36,10 +36,7 @@
 <p data-CN>另外，任何用户都可以推荐其他人来领取空投，如果有合格用户通过推荐链接成功领取支票，推荐人即可获得价值1美元cats的奖励（每天结算一次）。</p>
 <p data-EN>Besides, anyone can refer checkbook.cash to other people. And if a qualified account accepts its $CATS check by following a refer link, the referee will be rewarded with $CATS of value of $1. The rewards are settled once in a day.</p>
 
-<p id="hasReferLink" style="display: none">
-<span data-T>Your current account has sent transactions on smartBCH. According to the on-chain information, your refer link is generated as://您当前的账户曾经在smartBCH链上发送过交易，根据链上信息，生成您的推荐链接为：</span><a id="referLink"></a></p>
-
-<p id="hasNoReferLink" style="display: none" data-T>Your current account has never sent any transaction on smartBCH, so you cannot have a refer link now. Please refresh this page to retry, after you send at least one transaction on smartBCH.//您当前的账户尚未在smartBCH链上发送过交易，因为目前不能为您生成推荐链接。待您成功发送交易之后，再刷新本页面重试。</p>
+<p><span data-T>Your refer link is://您的推荐链接为：</span><a id="referLink"></a></p>
 
 <hr>
 <center><img src="/cashcats.png"></center>
@@ -59,9 +56,9 @@ function hexToReferID(hex) {
 
 function compareAddr(a, b) {
 	for(var i=0; i<20; i++) {
-		if(a.at(i) > b.at(i)) {
+		if(a[i] > b[i]) {
 			return 1
-		} else if(a.at(i) < b.at(i)) {
+		} else if(a[i] < b[i]) {
 			return -1
 		}
 	}
@@ -147,13 +144,6 @@ async function check() {
 		document.getElementById("noP").style.display = "block"
 		document.getElementById("notQualified").style.display = "block"
 	}
-	const nonce = await provider.getTransactionCount(myAddr)
-	console.log("nonce", nonce)
-	if(nonce == 0) {
-		document.getElementById("hasNoReferLink").style.display = "block"
-		return
-	}
-	document.getElementById("hasReferLink").style.display = "block"
 	var referLink = document.getElementById("referLink")
 	var link = "https://checkbook.cash/app/?r="+hexToReferID(myAddr.substr(2,22))
 	referLink.innerText = link
