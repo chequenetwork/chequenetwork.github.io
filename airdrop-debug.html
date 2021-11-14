@@ -86,6 +86,9 @@ function binarySearch(addrArr, myAddr) {
 		// Find the mid index
 		let mid=Math.floor((start + end)/2)
 
+		alert("mid"+mid)
+		alert(getAddrFromArray(addrArr, mid))
+		alert(myAddr)
 
 		let cmpResult = compareAddr(getAddrFromArray(addrArr, mid), myAddr)
 		alert("why"+" "+start+" "+mid+" "+end+" "+cmpResult)
