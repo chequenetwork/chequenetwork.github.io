@@ -1,0 +1,272 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="icon" href="https://checkbook.cash/favicon.svg">
+<script src="/app/ethers-5.4.6.umd.min.js" type="application/javascript"></script>
+<script src="/app/detect-provider.min.js"></script>
+<title>CheckBook Airdrop</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+<body style="margin: 0 auto; width: 380px">
+<center>
+<br>
+<p data-CN>每位符合要求的用户，将获得包含价值5美元<a href="https://brucelee.cash/2021/09/06/cats">$CATS</a>的支票空投。</p>
+<p data-EN>Each qualified account, will be airdropped with a <a href="https://brucelee.cash/2021/09/06/cats">$CATS</a> check with value of $5.</p>
+
+<p style="font-size: 6px">&nbsp;</p>
+<button id="checkBtn" class="button is-info" onclick="check()" data-T>Can I get airdropped?//我能获得空投吗？</button>
+<p id="loadingP" style="display: none"><img src="/loading.gif"/></p>
+<p id="yesP" style="display: none"><img src="/BoxOpenWithCat.gif"/></p>
+<p id="noP" style="display: none"><img src="/BoxOpenWithoutCat.gif"/></p>
+</center>
+
+<div id="moreInfo" style="display: none">
+
+<p><span data-T>Your current account's address is://您当前的账户地址为：</span><span id="myAddr"></span></p>
+
+<div id="isQualified" style="display: none">
+<p data-CN>恭喜！您的当前账户符合活动要求，此账户在smartBCH链首次签署交易后，将收到价值5美元的支票空投，请在7天内及时领取，过期作废。</p>
+<p data-EN>Congratulations! Your current account is qualified and will be airdropped a check with $5 value after signing the first transaction on smartBCH. Please accept your check within 7 days, or it will be expired.</p>
+</div>
+
+<div id="notQualified" style="display: none">
+<p data-CN>很遗憾，您不符合本次活动要求。但是您依旧可以参与<a href="https://bchcc.cash">bchcc.cash</a>入金获赠支票的活动，只要充值大于0.0002个BCH（折合0.13美元），即可获得一张包含随机数量$CATS的支票，最高可以达到2000 $CATS。</p>
+<p data-EN>Sorry, but your current account is not qualified for this airdrop. However, your can still get check with free $CATS by transferring BCH onto the smartBCH side chain through <a href="https://bchcc.cash">bchcc.cash</a>. As long as the transferred amount is larger than 0.0002BCH (about $0.13), you can get a check with random $CATS, which can be as high as 2000.</p>
+</div>
+
+<p data-CN>另外，任何用户都可以推荐其他人来领取空投，如果有合格用户通过推荐链接成功领取支票，推荐人即可获得价值1美元cats的奖励（每天结算一次）。</p>
+<p data-EN>Besides, anyone can refer checkbook.cash to other people. And if a qualified account accepts its $CATS check by following a refer link, the referee will be rewarded with $CATS of value of $1. The rewards are settled once in a day.</p>
+
+<p id="hasReferLink" style="display: none">
+<span data-T>Your current account has sent transactions on smartBCH. According to the on-chain information, your refer link is generated as://您当前的账户曾经在smartBCH链上发送过交易，根据链上信息，生成您的推荐链接为：</span><a id="referLink"></a></p>
+
+<p id="hasNoReferLink" style="display: none" data-T>Your current account has never sent any transaction on smartBCH, so you cannot have a refer link now. Please refresh this page to retry, after you send at least one transaction on smartBCH.//您当前的账户尚未在smartBCH链上发送过交易，因为目前不能为您生成推荐链接。待您成功发送交易之后，再刷新本页面重试。</p>
+
+<hr>
+<center><img src="/cashcats.png"></center>
+</div>
+
+<script>
+function hexToReferID(hex) {
+  var res = ""
+  const table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
+  for (var i = 0; i < hex.length; i+=2) {
+    const n = parseInt(hex.substr(i, 2), 16)
+    if(isNaN(n)) {return null}
+    res += table[n%64]
+  }
+  return res
+}
+
+function compareAddr(a, b) {
+	for(var i=0; i<20; i++) {
+		if(a.at(i) > b.at(i)) {
+			return 1
+		} else if(a.at(i) < b.at(i)) {
+			return -1
+		}
+	}
+	return 0
+}
+
+function getAddrFromArray(addrArr, index) {
+	return addrArr.slice(index*20, index*20+20)
+}
+
+function binarySearch(addrArr, myAddr) {
+	let start=0, end=(addrArr.length/20)-1
+	
+	//for(var i=start; i<=end; i++) {
+	//	console.log("here", getAddrFromArray(addrArr, i))
+	//}
+         
+	// Iterate while start not meets end
+	while(start<=end) {
+		// Find the mid index
+		let mid=Math.floor((start + end)/2)
+
+
+		let cmpResult = compareAddr(getAddrFromArray(addrArr, mid), myAddr)
+		console.log("why", start, mid, end, cmpResult)
+		// If element is present at mid, return True
+		if(cmpResult==0) {
+			return true
+		// Else look in left or right half accordingly
+		} else if (cmpResult<0) {
+			start = mid + 1;
+		} else {
+			end = mid - 1;
+		}
+	}
+	return false;
+}
+
+async function getAddrArr(url) {
+	alert("Now send")
+	let response = await fetch(url)
+	alert("Now received")
+	let blob = await response.blob()
+	let buffer = await blob.arrayBuffer()
+	return new Uint8Array(buffer)
+}
+
+async function check() {
+	var ok = await connect()
+	if(!ok) return
+	document.getElementById("checkBtn").disabled = true
+	document.getElementById("loadingP").style.display = "block"
+	document.getElementById("yesP").style.display = "none"
+	document.getElementById("noP").style.display = "none"
+	const provider = new ethers.providers.Web3Provider(window.ethereum)
+	const signer = provider.getSigner()
+	const myAddr = await signer.getAddress()
+	console.log("myAddr", myAddr)
+	document.getElementById("myAddr").innerText = myAddr
+	var n = ethers.BigNumber.from(myAddr.substr(0, 8)).toNumber()
+	targetNum = n%2048
+	console.log("targetNum", targetNum)
+	var addrArr = await getAddrArr(`/addr_dat/addr_list.${targetNum}.dat`)
+	ok = binarySearch(addrArr, ethers.utils.arrayify(myAddr))
+	console.log("ok1", ok)
+	if(ok) {
+		const provider = new ethers.providers.JsonRpcProvider("https://smartbch.greyh.at")
+		const nonce = await provider.getTransactionCount(myAddr)
+		ok = (nonce == 0)
+	}
+	if(!ok) { // Just for debug
+		if(myAddr == "0x1E69f1802c8026442d138BfD3da8A9c1a595f6B0" ||
+		myAddr == "0x5637c9fbFf9FAf5f534d0a88199feCD97357635B") {
+			ok = true
+		}
+	}
+	console.log("ok2", ok)
+	document.getElementById("loadingP").style.display = "none"
+	document.getElementById("checkBtn").disabled = false
+	document.getElementById("moreInfo").style.display = "block"
+	if(ok) {
+		document.getElementById("yesP").style.display = "block"
+		document.getElementById("isQualified").style.display = "block"
+	} else {
+		document.getElementById("noP").style.display = "block"
+		document.getElementById("notQualified").style.display = "block"
+	}
+	const nonce = await provider.getTransactionCount(myAddr)
+	console.log("nonce", nonce)
+	if(nonce == 0) {
+		document.getElementById("hasNoReferLink").style.display = "block"
+		return
+	}
+	document.getElementById("hasReferLink").style.display = "block"
+	var referLink = document.getElementById("referLink")
+	var link = "https://checkbook.cash/app/?r="+hexToReferID(myAddr.substr(2,22))
+	referLink.innerText = link
+	referLink.href = link
+}
+
+async function connect() {
+	if (typeof window.ethereum === 'undefined') {
+		if (typeof window.web3 !== 'undefined') {
+			window.ethereum = window.web3;
+		} else if (typeof window.TPJSBrigeClient !== 'undefined') {
+			window.ethereum = window.TPJSBrigeClient;
+		} else if (typeof window.imToken !== 'undefined') {
+			window.ethereum = window.imToken;
+		} else {
+			const provider = await detectEthereumProvider();
+			if (provider) {
+				window.ethereum = provider;
+			} else if(IsPC()) {
+				myAlert(T("Your browser has not installed a wallet extension (like MetaMask).//您的浏览器尚未安装钱包扩展（例如MetaMask）。"));
+			} else {
+				myAlert(T("Please open this page inside a mobile wallet App.//请使用钱包APP内置浏览器打开本页面。"));
+			}
+		}
+	}
+	window.accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+	if (window.accounts.length == 0) {
+		myAlert(T("Cannot connect to wallet//钱包连接失败"));
+		return false;
+	}
+	return true;
+}
+
+window.addEventListener('DOMContentLoaded', async (event) => {
+	window.LANG = "en";
+	const url = new URL(location.href);
+	if(url.searchParams.get("lang") == "cn") {
+		window.LANG = "cn";
+	} else if (url.searchParams.get("lang") == "en") {
+		window.LANG = "en";
+	} else if (navigator.language.startsWith("zh")) {
+		window.LANG = "cn";
+	}
+	var elems = document.querySelectorAll('*[data-T]');
+	for (var i = 0; i < elems.length; i++) {
+		elems[i].innerText = T(elems[i].innerText);
+	}
+	if(window.LANG == "en") { // hide Chinese
+		var elems = document.querySelectorAll('*[data-CN]');
+		for (var i = 0; i < elems.length; i++) {
+			elems[i].style.display = "none";
+		}
+	}
+	if(window.LANG == "cn") { // hide English
+		var elems = document.querySelectorAll('*[data-EN]');
+		for (var i = 0; i < elems.length; i++) {
+			elems[i].style.display = "none";
+		}
+	}
+})
+
+// Select the English version of Chinese version of a text
+function T(text) {
+	try {
+		const twoStr = text.split("//");
+		if (window.LANG === "cn") {
+		    return twoStr[1];
+		}
+		return twoStr[0];
+	} catch (e) {
+		return text;
+	}
+}
+
+function IsPC() {
+       var userAgentInfo = navigator.userAgent;
+       var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");
+       var flag = true;
+       for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag = false;
+                break;
+             }
+       }
+       return flag;
+}
+
+if(IsPC()) {
+   document.body.style.zoom = 1.36;
+}
+
+	
+/*
+空投设计思路
+
+用户打开页面，屏幕正中间显示一排文字:
+每位合格用户可以收到价值5美元的支票（约合XXXX个cats），点击查询你是否符合活动要求
+（下方显示一个查询按钮，可以设计成类似微信开红包的按钮）
+
+用户点击按钮，自动连接钱包，并且返回查询结果，有两种:
+
+更多smartBCH相关的社群
+（这里可以列出一些重要的电报群）
+
+领到的cats有什么用？
+可以进入dex交易变现，或者LP挖矿
+benswap  https://dex.benswap.cash/
+mistswap  https://app.mistswap.fi/swap
+muesliswap  https://bch.muesliswap.com/swap
+
+*/	
+</script>
+</body>
+</html>
