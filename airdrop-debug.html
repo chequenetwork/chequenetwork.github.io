@@ -59,6 +59,7 @@ function hexToReferID(hex) {
 
 function compareAddr(a, b) {
 	for(var i=0; i<20; i++) {
+		alert("HHH "+i+" "+a.at(i)+" "+b.at(i))
 		if(a.at(i) > b.at(i)) {
 			return 1
 		} else if(a.at(i) < b.at(i)) {
