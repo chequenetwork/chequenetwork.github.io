@@ -58,6 +58,8 @@ function hexToReferID(hex) {
 }
 
 function compareAddr(a, b) {
+	alert(a)
+	alert(b)
 	for(var i=0; i<20; i++) {
 		alert("HHH "+i+" "+a.at(i)+" "+b.at(i))
 		if(a.at(i) > b.at(i)) {
@@ -88,10 +90,11 @@ function binarySearch(addrArr, myAddr) {
 		let mid=Math.floor((start + end)/2)
 
 		alert("mid"+mid)
-		alert(getAddrFromArray(addrArr, mid))
+		const otherAddr = getAddrFromArray(addrArr, mid)
+		alert(otherAddr)
 		alert(myAddr)
 
-		let cmpResult = compareAddr(getAddrFromArray(addrArr, mid), myAddr)
+		let cmpResult = compareAddr(otherAddr, myAddr)
 		alert("why"+" "+start+" "+mid+" "+end+" "+cmpResult)
 		// If element is present at mid, return True
 		if(cmpResult==0) {
