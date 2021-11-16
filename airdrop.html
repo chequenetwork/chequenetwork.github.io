@@ -197,7 +197,6 @@ async function checkQualified() {
 	var ok = await connect()
 	if(!ok) return
 	document.getElementById("checkBtn").disabled = true
-	document.getElementById("loadingP").style.display = "block"
 	document.getElementById("yesP").style.display = "none"
 	document.getElementById("noP").style.display = "none"
 	const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -211,6 +210,13 @@ async function checkQualified() {
 	referLink.href = link
 	referLink.target = "_blank"
 
+	const network = await provider.getNetwork();
+	if(network.chainId != 10000) {
+		document.getElementById("switchChain").style.display = "block"
+		return
+	}
+
+	document.getElementById("loadingP").style.display = "block"
 	var n = ethers.BigNumber.from(myAddr.substr(0, 8)).toNumber()
 	var targetNum = n%2048
 	console.log("targetNum", targetNum)
@@ -222,11 +228,6 @@ async function checkQualified() {
 		document.getElementById("notQualified").style.display = "block"
 		document.getElementById("referDIV").style.display = "block"
 		document.getElementById("moreInfo").style.display = "block"
-		return
-	}
-	const network = await provider.getNetwork();
-	if(network.chainId != 10000) {
-		document.getElementById("switchChain").style.display = "block"
 		return
 	}
 
@@ -357,7 +358,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 	}
 })
 
-// Select the English version of Chinese version of a text
+// Select the English version or Chinese version of a text
 function T(text) {
 	try {
 		const twoStr = text.split("//");
