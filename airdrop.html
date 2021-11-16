@@ -69,10 +69,18 @@
 </center>
 
 <div id="switchChain" style="display: none">
-<p data-EN><br>You wallet is not connecting to smartBCH. If you have never added smart BCH to your wallet, please click the following button to add it. If you have added it before, please switch to smartBCH and then <a href="javascript:location.reload()">reload</a> this page.</p>
-<p data-CN><br>您的钱包并未连接到smartBCH链。如果您从未将smartBCH加入您的钱包，请点击下面的按钮来添加。如果您已经添加过了，请切换到smartBCH链，然后<a href="javascript:location.reload()">刷新</a>本页面。</p>
+<p data-EN><br>You wallet is not connecting to smartBCH. If you have never added smart BCH to your wallet, please click the following button to add it, or add it manually according to following table. If you have added it before, please switch to smartBCH and then <a href="javascript:location.reload()">reload</a> this page.</p>
+<p data-CN><br>您的钱包并未连接到smartBCH链。如果您从未将smartBCH加入您的钱包，请点击下面的按钮来添加，或者按照下面表格中的信息手动添加。如果您已经添加过了，请切换到smartBCH链，然后<a href="javascript:location.reload()">刷新</a>本页面。</p>
 <p style="text-align: center"><button class="button is-small" onclick="addSmartBCH()" data-T>
 Add smartBCH to Wallet//将smartBCH加入钱包</button></p>
+<p style="font-size: 6px">&nbsp;</p>
+<table>
+<tr><td data-T>Network Name//网络名称</td><td>smartBCH</td></tr>
+<tr><td data-T>New RPC URL//新增 RPC URL</td><td>https://smartbch.greyh.at</td></tr>
+<tr><td data-T>Chain ID//链 ID</td><td>10000</td></tr>
+<tr><td data-T>Currency Symbol//符号</td><td>BCH</td></tr>
+<tr><td data-T>Block Explorer URL//区块浏览器 URL&nbsp;&nbsp;&nbsp;&nbsp;</td><td>https://smartscan.cash</td></tr>
+</table>
 </div>
 
 <div id="moreInfo" style="display: none">
@@ -221,7 +229,6 @@ async function checkQualified() {
 		document.getElementById("switchChain").style.display = "block"
 		return
 	}
-	document.getElementById("checkBtn").disabled = false
 
 	if(localStorage.getItem("airdrop-"+myAddr) !== "yes") {
 		const message = "I want free $CATS!"
