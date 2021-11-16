@@ -191,7 +191,7 @@ async function checkQualified() {
 	console.log("myAddr", myAddr)
 	document.getElementById("myAddr").innerText = myAddr
 	var referLink =  document.getElementById("referLink")
-	var link = "https://checkbook.cash/app/?r="+hexToReferID(myAddr.substr(2,26))
+	var link = "https://checkbook.cash/airdrop?r="+hexToReferID(myAddr.substr(2,26))
 	referLink.innerText = link
 	referLink.href = link
 
@@ -304,6 +304,11 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 		}
 	}
 
+	const url = new URL(location.href);
+	const referID = url.searchParams.get("r")
+	if(referID) {
+		localStorage.setItem("referID", referID)
+	}
 		
 	window.LANG = "en";
 	const url = new URL(location.href);
