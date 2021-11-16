@@ -204,6 +204,7 @@ async function checkQualified() {
 	if(!ok) {
 		document.getElementById("noP").style.display = "block"
 		document.getElementById("notQualified").style.display = "block"
+		document.getElementById("referDIV").style.display = "block"
 		document.getElementById("moreInfo").style.display = "block"
 		return
 	}
@@ -228,6 +229,8 @@ async function checkQualified() {
 	const balance = await provider.getBalance(myAddr)
 	if(balance.isZero()) {
 		document.getElementById("getBCH").style.display = "block"
+	} else {
+		document.getElementById("referDIV").style.display = "block"
 	}
 }
 
