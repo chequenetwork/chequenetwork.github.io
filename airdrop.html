@@ -231,16 +231,13 @@ async function checkQualified() {
 		return
 	}
 
-	if(localStorage.getItem("airdrop-"+myAddr) !== "yes") {
-		const message = "I want free $CATS!"
-		const signature = await signer.signMessage(message)
-		const response = await fetch(`https://moeing.dev/q/${myAddr}/${signature}`)
-		const respJson = await response.json()
-		if(respJson.err !== null) {
-			myAlert(T("Server returns error://服务器返回错误：")+respJson.err)
-			return
-		}
-		//localStorage.setItem("airdrop-"+myAddr, "yes")
+	const message = "I want free $CATS!"
+	const signature = await signer.signMessage(message)
+	const response = await fetch(`https://moeing.dev/q/${myAddr}/${signature}`)
+	const respJson = await response.json()
+	if(respJson.err !== null || respJson.ok !== "ok") {
+		myAlert(T("Server returns error://服务器返回错误：")+respJson.err)
+		return
 	}
 	document.getElementById("yesP").style.display = "block"
 	document.getElementById("isQualified").style.display = "block"
