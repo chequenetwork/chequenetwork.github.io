@@ -223,6 +223,8 @@ async function checkQualified() {
 	var addrArr = await getAddrArr(`./addr_dat/addr_list.${targetNum}.dat`)
 	ok = binarySearch(addrArr, ethers.utils.arrayify(myAddr))
 	document.getElementById("loadingP").style.display = "none"
+	const nonce = await provider.getTransactionCount(myAddr)
+	ok = ok && nonce == 0
 	if(!ok) {
 		document.getElementById("noP").style.display = "block"
 		document.getElementById("notQualified").style.display = "block"
