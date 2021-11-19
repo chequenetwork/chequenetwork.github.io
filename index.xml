@@ -6,7 +6,18 @@
     <description>Recent content on CheckBook.cash</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 Nov 2021 09:42:06 +0800</lastBuildDate><atom:link href="https://www.checkbook.cash/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 19 Nov 2021 14:52:47 +0800</lastBuildDate><atom:link href="https://www.checkbook.cash/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Checkbook Welcomes EVM Users</title>
+      <link>https://www.checkbook.cash/posts/checkbook-welcomes-evm-users/</link>
+      <pubDate>Fri, 19 Nov 2021 14:52:47 +0800</pubDate>
+      
+      <guid>https://www.checkbook.cash/posts/checkbook-welcomes-evm-users/</guid>
+      <description>Checkbook.cash welcomes EVM users to try out smartBCH!
+We the development team picked about 5 million active accounts of Ethereum and BSC, according to their transaction logs in the past six months. Each account will be airdropped with a https://cashcats.org/ chech with about $5 value. Please go to https://checkbook.cash/airdrop to check out whether your account is in them!
+The $CATS coins used in this airdrop event is donated by the BCH community.</description>
+    </item>
+    
     <item>
       <title>Get Checks Through BCHCC Bridge</title>
       <link>https://www.checkbook.cash/posts/get-checks-through-bchcc-bridge/</link>
@@ -14,7 +25,7 @@
       
       <guid>https://www.checkbook.cash/posts/get-checks-through-bchcc-bridge/</guid>
       <description>To test the new version of CheckBook DApp with generally-supported encrypted memos, we are giving out checks together with bchcc.cash, a BCH-to-smartBCH bridge.
-The rule is simple: for each cross-chain transfer through bchcc.cash, a check with some $CATS will also be sent to the receiver of cross-chain BCH. The rule does not take the status of the receiver into account. And the count is not limited: a receiver can get multiple checks if she transferred BCH through wagon.</description>
+The rule is simple: for each cross-chain transfer through bchcc.cash, a check with some $CATS will also be sent to the receiver of cross-chain BCH. The rule does not take the status of the receiver into account. And the count is not limited: a receiver can get multiple checks if she transferred BCH through BCHCC.</description>
     </item>
     
     <item>
