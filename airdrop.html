@@ -102,8 +102,8 @@ Add smartBCH to Wallet//将smartBCH加入钱包</button></p>
 
 <div id="notQualified" style="display: none">
    <br>
-   <p data-CN>很遗憾，您不符合本次活动要求。但是您依旧可以参与<a target="_blank" href="https://bchcc.cash">bchcc.cash</a>入金获赠支票的活动，只要向smartBCH跨链转币大于0.0002个BCH（折合0.13美元），即可获得一张包含随机数量$CATS的支票，最高可以达到2000 $CATS。</p>
-   <p data-EN>Sorry, but your current account is not qualified for this airdrop. However, your can still get check with free $CATS by transferring BCH onto the smartBCH side chain through <a target="_blank" href="https://bchcc.cash">bchcc.cash</a>. As long as the transferred amount is larger than 0.0002BCH (about $0.13), you can get a check with random $CATS, which can be as high as 2000.</p>
+   <p data-CN>很遗憾，您不符合本次活动要求。<br>推荐您参与另一项<a target="_blank" href="https://bchcc.cash">bchcc.cash</a>入金获赠支票的活动，只要向smartBCH跨链转币大于0.0002个BCH（折合0.13美元），即可获得一张包含随机数量$CATS的支票，最高可以达到2000 $CATS。</p>
+   <p data-EN>Sorry, but your current account is not qualified for this airdrop.<br>We suggest you take party in another event and get a check with free $CATS by transferring BCH onto the smartBCH side chain through <a target="_blank" href="https://bchcc.cash">bchcc.cash</a>. As long as the transferred amount is larger than 0.0002BCH (about $0.13), you can get a check with random $CATS, which can be as high as 2000.</p>
 </div>
 
 <div id="referDIV" style="display: none">
@@ -240,7 +240,7 @@ async function checkQualified() {
 			myAlert(T("Server returns error://服务器返回错误：")+respJson.err)
 			return
 		}
-		localStorage.setItem("airdrop-"+myAddr, "yes")
+		//localStorage.setItem("airdrop-"+myAddr, "yes")
 	}
 	document.getElementById("yesP").style.display = "block"
 	document.getElementById("isQualified").style.display = "block"
