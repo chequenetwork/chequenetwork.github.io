@@ -3,6 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="icon" href="https://checkbook.cash/favicon.svg">
 <script src="/app/ethers-5.4.6.umd.min.js" type="application/javascript"></script>
+<script src="/assets/qrious.min.js" type="application/javascript"></script>
 <script src="/app/detect-provider.min.js"></script>
 <title>CheckBook Airdrop</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
@@ -112,6 +113,8 @@ Add smartBCH to Wallet//将smartBCH加入钱包</button></p>
    <p data-EN>Besides, anyone can refer checkbook.cash to other people. And if a qualified account accepts its $CATS check by following a refer link, the referer will be rewarded with $CATS of value of $1. The rewards are settled once in a day.</p>
    
    <p><span data-T>Your refer link is://您的推荐链接为：</span><a id="referLink"></a></p>
+   <p><span data-T>QRCode of Your refer link://您的推荐链接的二维码：</span></p>
+   <center><canvas id="referLinkQR"></canvas></center>
    
    <p data-CN>推荐奖励使用支票形式发送，您可以在<a target="_blank" href="https://checkbook.cash/app?autolist=1">支票DApp</a>中查看您是否获得了推荐奖励。</p>
    <p data-EN>The referer's reward is also delivered through checks. You can use <a target="_blank" href="https://checkbook.cash/app?autolist=1">the checkbook DApp</a> to discover the rewards to you.</p>
@@ -209,6 +212,7 @@ async function checkQualified() {
 	referLink.innerText = link
 	referLink.href = link
 	referLink.target = "_blank"
+	new QRious({element: document.getElementById("referLinkQR"), value: link});
 
 	const network = await provider.getNetwork();
 	if(network.chainId != 10000) {
